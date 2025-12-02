@@ -96,27 +96,32 @@ export async function updateTokensPriceUSD(
   chainId: number,
   lbPairEntity: Awaited<ReturnType<typeof loadLbPair>>,
   binId?: string
-) {
+): Promise<{ tokenXPriceUSD: BigDecimal; tokenYPriceUSD: BigDecimal }> {
   const tokenX = await loadToken(context, chainId, getAddressFromPk(lbPairEntity.tokenX_id));
   const tokenY = await loadToken(context, chainId, getAddressFromPk(lbPairEntity.tokenY_id));
 
   const [tokenXPriceUSD, tokenYPriceUSD] = await getTokensPriceInUSD(context, chainId, lbPairEntity, tokenX, tokenY, binId);
 
+  const tokenXPriceUSDDecimal = new BigDecimal(tokenXPriceUSD);
+  const tokenYPriceUSDDecimal = new BigDecimal(tokenYPriceUSD);
+
   context.LBPair.set({
     ...lbPairEntity,
-    tokenXPriceUSD: new BigDecimal(tokenXPriceUSD),
-    tokenYPriceUSD: new BigDecimal(tokenYPriceUSD),
+    tokenXPriceUSD: tokenXPriceUSDDecimal,
+    tokenYPriceUSD: tokenYPriceUSDDecimal,
   });
 
   context.Token.set({
     ...tokenX,
-    priceUSD: new BigDecimal(tokenXPriceUSD),
+    priceUSD: tokenXPriceUSDDecimal,
   });
 
   context.Token.set({
     ...tokenY,
-    priceUSD: new BigDecimal(tokenYPriceUSD),
+    priceUSD: tokenYPriceUSDDecimal,
   });
+
+  return { tokenXPriceUSD: tokenXPriceUSDDecimal, tokenYPriceUSD: tokenYPriceUSDDecimal };
 }
 
 /**

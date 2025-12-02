@@ -171,7 +171,9 @@ LBPair.DepositedToBins.handler(async ({ event, context }) => {
   const lbPairEntity = await loadLbPair(context, event.chainId, event.srcAddress);
   const lbFactoryEntity = await loadLBFactory(context, event.chainId);
   await updateNativeInUsdPricing(context, event.chainId, event.block.number, event.block.timestamp);
-  await updateTokensPriceUSD(context, event.chainId, lbPairEntity);
+  const { tokenXPriceUSD, tokenYPriceUSD } = await updateTokensPriceUSD(context, event.chainId, lbPairEntity);
+  lbPairEntity.tokenXPriceUSD = tokenXPriceUSD;
+  lbPairEntity.tokenYPriceUSD = tokenYPriceUSD;
 
   const tokenX = await loadToken(context, event.chainId, getAddressFromPk(lbPairEntity.tokenX_id));
   const tokenY = await loadToken(context, event.chainId, getAddressFromPk(lbPairEntity.tokenY_id));
@@ -232,6 +234,9 @@ LBPair.WithdrawnFromBins.handler(async ({ event, context }) => {
   let lbFactoryEntity = await loadLBFactory(context, event.chainId);
 
   await updateNativeInUsdPricing(context, event.chainId, event.block.number, event.block.timestamp);
+  const { tokenXPriceUSD, tokenYPriceUSD } = await updateTokensPriceUSD(context, event.chainId, lbPairEntity);
+  lbPairEntity.tokenXPriceUSD = tokenXPriceUSD;
+  lbPairEntity.tokenYPriceUSD = tokenYPriceUSD;
 
   const tokenX = await loadToken(context, event.chainId, getAddressFromPk(lbPairEntity.tokenX_id));
   const tokenY = await loadToken(context, event.chainId, getAddressFromPk(lbPairEntity.tokenY_id));
