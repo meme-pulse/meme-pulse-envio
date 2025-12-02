@@ -10,6 +10,7 @@ import { loadBundle } from '../entities/bundle';
 import { loadLbPair } from '../entities/lbPair';
 import { loadToken } from '../entities/token';
 import { WNATIVE_ADDRESS } from './constants';
+import { getAddressFromPk } from './helper';
 
 import { BigDecimal, handlerContext } from 'generated';
 import { getNativePriceInUSD } from '../effect/oracle';
@@ -96,8 +97,8 @@ export async function updateTokensPriceUSD(
   lbPairEntity: Awaited<ReturnType<typeof loadLbPair>>,
   binId?: string
 ) {
-  const tokenX = await loadToken(context, chainId, lbPairEntity.tokenX_id);
-  const tokenY = await loadToken(context, chainId, lbPairEntity.tokenY_id);
+  const tokenX = await loadToken(context, chainId, getAddressFromPk(lbPairEntity.tokenX_id));
+  const tokenY = await loadToken(context, chainId, getAddressFromPk(lbPairEntity.tokenY_id));
 
   const [tokenXPriceUSD, tokenYPriceUSD] = await getTokensPriceInUSD(context, chainId, lbPairEntity, tokenX, tokenY, binId);
 
