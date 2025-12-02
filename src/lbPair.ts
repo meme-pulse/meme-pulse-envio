@@ -1,5 +1,5 @@
 import { BigDecimal, LBPair } from 'generated';
-import { loadLbPair } from './entities/lbPair';
+import { loadLbPair, loadLbPairOrNull } from './entities/lbPair';
 import {
   decodeAmounts,
   formatTokenAmountByDecimals,
@@ -355,7 +355,13 @@ LBPair.TransferBatch.handler(async ({ event, context }) => {
 });
 
 LBPair.StaticFeeParametersSet.handler(async ({ event, context }) => {
-  const lbPairEntity = await loadLbPair(context, event.chainId, event.srcAddress);
+  const lbPairEntity = await loadLbPairOrNull(context, event.chainId, event.srcAddress);
+
+  // Skip if LBPair doesn't exist yet (happens when event is in same block as LBPairCreated)
+  // LBPairCreated handler already sets baseFeePct from metadata
+  if (!lbPairEntity) {
+    return;
+  }
 
   const baseFee = new BigDecimal(lbPairEntity.binStep.toString())
     .multipliedBy(new BigDecimal(event.params.baseFactor.toString()))
