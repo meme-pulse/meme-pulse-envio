@@ -111,7 +111,8 @@ export async function updateUserAccruedFeesDataBothTokens(
       continue;
     }
 
-    const userEntity = await loadUser(context, chainId, userBinLiquidityEntity.user_id);
+    // user_id is already a PK (chainId:userAddress format), so we get it directly
+    const userEntity = await context.User.get(userBinLiquidityEntity.user_id);
     if (!userEntity) {
       continue;
     }
