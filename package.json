@@ -1,6 +1,6 @@
 {
   "name": "meme-pulse-envio",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "clean": "tsc --clean",
     "build": "tsc --build",
@@ -21,7 +21,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "envio": "2.27.6",
+    "envio": "2.32.3",
     "viem": "^2.34.0"
   },
   "optionalDependencies": {
