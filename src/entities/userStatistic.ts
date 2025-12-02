@@ -1,8 +1,8 @@
-import { BigDecimal, HandlerContext } from 'generated';
+import { BigDecimal, handlerContext } from 'generated';
 import { createWritableCopy } from '../utils/copy';
 import { getUserTokenDayDataPk } from '../utils/helper';
 
-export async function loadUserTokenDayData(context: HandlerContext, chainId: number, userId: string, tokenId: string, timestamp: number) {
+export async function loadUserTokenDayData(context: handlerContext, chainId: number, userId: string, tokenId: string, timestamp: number) {
   const SECONDS_IN_DAY = 60 * 60 * 24;
   const dayId = Math.floor(timestamp / SECONDS_IN_DAY);
   const dayStartTimestamp = dayId * SECONDS_IN_DAY;

@@ -1,6 +1,6 @@
 // MemePulse DEX Indexer - Interval Data Entities
 
-import { BigDecimal, HandlerContext } from 'generated';
+import { BigDecimal, handlerContext } from 'generated';
 import { loadLbPair } from './lbPair';
 import { loadLBFactory } from './lbFactory';
 import { loadToken } from './token';
@@ -14,7 +14,7 @@ import {
   getLBPairHourDataPk,
 } from '../utils/helper';
 
-export async function loadMemePulseHourData(context: HandlerContext, chainId: number, timestamp: number, update: boolean) {
+export async function loadMemePulseHourData(context: handlerContext, chainId: number, timestamp: number, update: boolean) {
   const SECONDS_IN_HOUR = 60 * 60;
   const hourId = Math.floor(timestamp / SECONDS_IN_HOUR);
   const hourStartTimestamp = hourId * SECONDS_IN_HOUR;
@@ -46,7 +46,7 @@ export async function loadMemePulseHourData(context: HandlerContext, chainId: nu
   return memePulseHourDataEntity;
 }
 
-export async function loadMemePulseDayData(context: HandlerContext, chainId: number, timestamp: number, update: boolean) {
+export async function loadMemePulseDayData(context: handlerContext, chainId: number, timestamp: number, update: boolean) {
   const SECONDS_IN_DAY = 60 * 60 * 24;
   const dayId = Math.floor(timestamp / SECONDS_IN_DAY);
   const dayStartTimestamp = dayId * SECONDS_IN_DAY;
@@ -78,7 +78,7 @@ export async function loadMemePulseDayData(context: HandlerContext, chainId: num
 }
 
 export async function loadTokenHourData(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   timestamp: number,
   token: Awaited<ReturnType<typeof loadToken>>,
@@ -146,7 +146,7 @@ export async function loadTokenHourData(
 }
 
 export async function loadTokenDayData(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   timestamp: number,
   token: Awaited<ReturnType<typeof loadToken>>,
@@ -216,7 +216,7 @@ export async function loadTokenDayData(
 }
 
 export async function loadLBPairHourData(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   timestamp: number,
   lbPair: Awaited<ReturnType<typeof loadLbPair>>,
@@ -262,7 +262,7 @@ export async function loadLBPairHourData(
 }
 
 export async function loadLBPairDayData(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   timestamp: number,
   lbPair: Awaited<ReturnType<typeof loadLbPair>>,

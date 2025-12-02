@@ -1,8 +1,8 @@
-import { BigDecimal, HandlerContext } from 'generated';
+import { BigDecimal, handlerContext } from 'generated';
 import { getNativePriceInUSD } from '../effect/oracle';
 import { getBundlePk } from '../utils/helper';
 
-export async function loadBundle(context: HandlerContext, chainId: number) {
+export async function loadBundle(context: handlerContext, chainId: number) {
   const bundlePk = getBundlePk(chainId);
   let bundleEntity = await context.Bundle.get(bundlePk);
   if (bundleEntity) {

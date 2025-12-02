@@ -1,11 +1,11 @@
-import { Block_t, HandlerContext } from 'generated';
+import { Block_t, handlerContext } from 'generated';
 import { loadLbPair } from './lbPair';
 import { loadUser } from './user';
 import { createWritableCopy } from '../utils/copy';
 import { getBinPk, getUserBinLiquidityPk } from '../utils/helper';
 
 export async function getUserBinLiquidity(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   liquidityPositionsId: string,
   lbPair: Awaited<ReturnType<typeof loadLbPair>>,
@@ -32,6 +32,6 @@ export async function getUserBinLiquidity(
   return createWritableCopy(userBinLiquidityEntity);
 }
 
-export async function removeUserBinLiquidity(context: HandlerContext, chainId: number, id: string) {
+export async function removeUserBinLiquidity(context: handlerContext, chainId: number, id: string) {
   context.UserBinLiquidity.deleteUnsafe(id);
 }

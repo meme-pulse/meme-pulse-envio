@@ -3,12 +3,12 @@ import { loadUser } from './user';
 import { Address, zeroAddress } from 'viem';
 import { loadBin } from './bin';
 import { getUserBinLiquidity, removeUserBinLiquidity } from './userBinLiquidity';
-import { BigDecimal, Block_t, HandlerContext } from 'generated';
+import { BigDecimal, Block_t, handlerContext } from 'generated';
 import { createWritableCopy } from '../utils/copy';
 import { getUserFeesPerBinDataPk, getUserLiquidityPositionPk } from '../utils/helper';
 
 export async function getLiquidityPosition(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   lbPair: Awaited<ReturnType<typeof loadLbPair>>,
   user: Awaited<ReturnType<typeof loadUser>>,
@@ -35,7 +35,7 @@ export async function getLiquidityPosition(
 }
 
 export async function addLiquidityPosition(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   lbPairAddr: string,
   userAddr: string,
@@ -114,7 +114,7 @@ export async function addLiquidityPosition(
 }
 
 export async function removeLiquidityPosition(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   lbPairAddr: string,
   userAddr: string,

@@ -1,10 +1,10 @@
-import { HandlerContext, BigDecimal } from 'generated';
+import { handlerContext, BigDecimal } from 'generated';
 import { getTokenMetadata } from '../effect/token';
 import { createWritableCopy } from '../utils/copy';
 import { memoryDecimals } from '../utils/memory';
 import { getTokenPk } from '../utils/helper';
 
-export async function loadToken(context: HandlerContext, chainId: number, tokenAddress: string) {
+export async function loadToken(context: handlerContext, chainId: number, tokenAddress: string) {
   // Fetch and store token0 information
   const tokenPk = getTokenPk(chainId, tokenAddress);
   const token = await context.Token.get(tokenPk);

@@ -1,10 +1,10 @@
-import { BigDecimal, HandlerContext } from 'generated';
+import { BigDecimal, handlerContext } from 'generated';
 import { zeroAddress } from 'viem';
 import { createWritableCopy } from '../utils/copy';
 import { LB_FACTORY_ADDRESS } from '../utils/constants';
 import { getFactoryPk } from '../utils/helper';
 
-export async function loadLBFactory(context: HandlerContext, chainId: number) {
+export async function loadLBFactory(context: handlerContext, chainId: number) {
   const lbFactoryPk = getFactoryPk(chainId, LB_FACTORY_ADDRESS[chainId]);
   const lbFactoryEntity = await context.LBFactory.get(lbFactoryPk);
   if (lbFactoryEntity) {

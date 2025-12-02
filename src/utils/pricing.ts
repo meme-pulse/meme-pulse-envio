@@ -11,11 +11,11 @@ import { loadLbPair } from '../entities/lbPair';
 import { loadToken } from '../entities/token';
 import { WNATIVE_ADDRESS } from './constants';
 
-import { BigDecimal, HandlerContext } from 'generated';
+import { BigDecimal, handlerContext } from 'generated';
 import { getNativePriceInUSD } from '../effect/oracle';
 
 export async function getTokensPriceInUSD(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   lbPairEntity: Awaited<ReturnType<typeof loadLbPair>>,
   tokenX: Awaited<ReturnType<typeof loadToken>>,
@@ -61,7 +61,7 @@ export async function getTokensPriceInUSD(
  * Updates native (MEME) price in USD from oracle
  */
 export async function updateNativeInUsdPricing(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   blockNumber: number,
   timestamp: number
@@ -91,7 +91,7 @@ export async function updateNativeInUsdPricing(
  * @param {BigInt | null} binId
  */
 export async function updateTokensPriceUSD(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   lbPairEntity: Awaited<ReturnType<typeof loadLbPair>>,
   binId?: string

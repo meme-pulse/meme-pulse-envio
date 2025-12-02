@@ -1,12 +1,12 @@
 import { loadToken } from './token';
 import { loadLbPair } from './lbPair';
 import { getPriceYOfBin, getPriceYOfBinWithDecimals } from '../utils/pricing';
-import { BigDecimal, HandlerContext } from 'generated';
+import { BigDecimal, handlerContext } from 'generated';
 import { createWritableCopy } from '../utils/copy';
 import { memoryDecimals } from '../utils/memory';
 import { getBinPk } from '../utils/helper';
 
-export async function loadBin(context: HandlerContext, chainId: number, lbPair: Awaited<ReturnType<typeof loadLbPair>>, binId: string) {
+export async function loadBin(context: handlerContext, chainId: number, lbPair: Awaited<ReturnType<typeof loadLbPair>>, binId: string) {
   const id = getBinPk(chainId, lbPair.id, binId);
   const binEntity = await context.Bin.get(id);
   if (binEntity) {
@@ -41,7 +41,7 @@ export async function loadBin(context: HandlerContext, chainId: number, lbPair: 
 }
 
 export async function trackBin(
-  context: HandlerContext,
+  context: handlerContext,
   chainId: number,
   lbPair: Awaited<ReturnType<typeof loadLbPair>>,
   binId: string,
