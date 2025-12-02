@@ -1,0 +1,668 @@
+type Bundle {
+  id: ID! # chainId:1
+  chainId: Int! @indexed
+  nativePriceUSD: BigDecimal!
+  lastUpdatedBlock: Int!
+  lastUpdatedTimestamp: Int!
+}
+
+type LBFactory {
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  address: Bytes!
+  feeRecipient: Bytes!
+  pairCount: BigInt!
+  volumeUSD: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+}
+
+type Token @entity {
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  address: Bytes! # token address
+  # mirrored from the smart contract
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+
+  derivedNative: BigDecimal!
+  priceUSD: BigDecimal!
+}
+
+type LBPair @entity {
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  # Contract address
+  address: Bytes!
+
+  # Factory
+  factory: LBFactory!
+
+  # Name
+  name: String!
+  # Base Fee
+  baseFeePct: BigDecimal!
+
+  # mirrored from the smart contract
+  tokenX: Token!
+  tokenY: Token!
+  binStep: BigInt!
+  activeId: BigInt!
+
+  reserveX: BigDecimal!
+  reserveY: BigDecimal!
+
+  # tvl
+  totalValueLockedUSD: BigDecimal!
+
+  # Price in terms of the asset pair
+  tokenXPrice: BigDecimal!
+  tokenYPrice: BigDecimal!
+  # Price in terms of USDC
+  tokenXPriceUSD: BigDecimal!
+  tokenYPriceUSD: BigDecimal!
+
+  # lifetime volume stats
+  volumeTokenX: BigDecimal!
+  volumeTokenY: BigDecimal!
+  volumeUSD: BigDecimal!
+  txCount: BigInt!
+  feesTokenX: BigDecimal!
+  feesTokenY: BigDecimal!
+  feesUSD: BigDecimal! # swap fees
+  # Fields used to help derived relationship
+  # used to detect new exchanges
+
+  liquidityProviderCount: BigInt!
+  bins: [Bin!]! @derivedFrom(field: "lbPair")
+  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "lbPair")
+  dayData: [LBPairDayData!]! @derivedFrom(field: "lbPair")
+  hourData: [LBPairHourData!]! @derivedFrom(field: "lbPair")
+
+  # Transactions
+  mints: [Mint!]! @derivedFrom(field: "lbPair")
+  burns: [Burn!]! @derivedFrom(field: "lbPair")
+  swaps: [Swap!]! @derivedFrom(field: "lbPair")
+  flashed: [Flash!]! @derivedFrom(field: "lbPair")
+  # collects: [Collect!]! @derivedFrom(field: "lbPair")
+  transfers: [Transfer!]! @derivedFrom(field: "lbPair")
+
+  # Created at
+  timestamp: Int!
+  block: Int!
+}
+
+type LBPairParameterSet @entity {
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  address: Bytes!
+  # LBPair address
+  sender: Bytes!
+  lbPair: LBPair!
+  baseFactor: Int!
+  filterPeriod: Int!
+  decayPeriod: Int!
+  reductionFactor: Int!
+  variableFeeControl: Int!
+  protocolShare: Int!
+  protocolSharePct: Int!
+  maxVolatilityAccumulator: Int!
+}
+
+type LBHourData {
+  # timestamp / 3600
+  id: ID! # chainId:date
+  chainId: Int! @indexed
+  date: Int!
+  factory: LBFactory!
+
+  volumeNative: BigDecimal!
+  volumeUSD: BigDecimal!
+  untrackedVolumeUSD: BigDecimal!
+
+  totalValueLockedNative: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+
+  feesUSD: BigDecimal!
+  txCount: BigInt!
+}
+
+type LBDayData {
+  # timestamp / 86400
+  id: ID! # chainId:date
+  chainId: Int! @indexed
+  date: Int!
+  factory: LBFactory!
+
+  volumeNative: BigDecimal!
+  volumeUSD: BigDecimal!
+  untrackedVolumeUSD: BigDecimal!
+
+  totalValueLockedNative: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+
+  feesUSD: BigDecimal!
+  txCount: BigInt!
+}
+
+type TokenHourData @entity {
+  # timestamp / 3600
+  id: ID! # chainId:tokenAddress:date
+  chainId: Int! @indexed
+
+  # date - hour start timestamp
+  date: Int!
+
+  # token
+  token: Token!
+
+  # volume
+  volume: BigDecimal!
+  volumeNative: BigDecimal!
+  volumeUSD: BigDecimal!
+
+  # tx count
+  txCount: BigInt!
+
+  # TVL
+  totalValueLocked: BigDecimal!
+  totalValueLockedNative: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+
+  # price usd
+  priceUSD: BigDecimal!
+
+  feesUSD: BigDecimal!
+
+  # opening price USD
+  openPriceUSD: BigDecimal!
+  # high price USD
+  highPriceUSD: BigDecimal!
+  # low price USD
+  lowPriceUSD: BigDecimal!
+  # close price USD
+  closePriceUSD: BigDecimal!
+}
+
+type TokenDayData @entity {
+  # timestamp / 86400
+  id: ID! # chainId:tokenAddress:date
+  chainId: Int! @indexed
+
+  # date - day start timestamp
+  date: Int!
+
+  # token
+  token: Token!
+
+  # volume
+  volume: BigDecimal!
+  volumeNative: BigDecimal!
+  volumeUSD: BigDecimal!
+
+  # tx count
+  txCount: BigInt!
+
+  # TVL
+  totalValueLocked: BigDecimal!
+  totalValueLockedNative: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+
+  # price usd
+  priceUSD: BigDecimal!
+
+  feesUSD: BigDecimal!
+
+  # opening price USD
+  openPriceUSD: BigDecimal!
+  # high price USD
+  highPriceUSD: BigDecimal!
+  # low price USD
+  lowPriceUSD: BigDecimal!
+  # close price USD
+  closePriceUSD: BigDecimal!
+}
+
+type Bin @entity {
+  id: ID! # chainId:lbPairAddress:binId
+  chainId: Int! @indexed
+  lbPair: LBPair!
+
+  priceX: BigDecimal!
+  priceY: BigDecimal!
+
+  totalSupply: BigInt!
+  reserveX: BigDecimal!
+  reserveY: BigDecimal!
+
+  binId: Int!
+
+  liquidityProviders: [String!]!
+  liquidityProviderCount: BigInt!
+}
+
+type User @entity {
+  # Address
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  address: Bytes!
+
+  # Approval for All
+  lbTokenApprovals: [Bytes!]!
+
+  # Liquidity Positions
+  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "user")
+
+  # fees collected by user for providing liquidity
+  # collects: [Collect!]! @derivedFrom(field: "recipient")
+}
+
+type LBPairDayData @entity {
+  # timestamp / 86400
+  id: ID! # chainId:lbPairAddress:date
+  chainId: Int! @indexed
+
+  # date - day start timestamp
+  date: Int!
+
+  # pair
+  lbPair: LBPair!
+
+  tokenX: Token!
+  tokenY: Token!
+
+  # reserves
+  reserveX: BigDecimal!
+  reserveY: BigDecimal!
+
+  # tvl at end of day
+  totalValueLockedUSD: BigDecimal!
+
+  # volume
+  volumeTokenX: BigDecimal!
+  volumeTokenY: BigDecimal!
+
+  # volume usd
+  volumeUSD: BigDecimal!
+  untrackedVolumeUSD: BigDecimal!
+
+  # tx count
+  txCount: BigInt!
+
+  # swap fees
+  feesUSD: BigDecimal!
+}
+
+type LBPairHourData @entity {
+  # timestamp / 3600
+  id: ID! # chainId:lbPairAddress:date
+  chainId: Int! @indexed
+
+  # date - hour start timestamp
+  date: Int!
+
+  # pair
+  lbPair: LBPair!
+
+  tokenX: Token!
+  tokenY: Token!
+
+  # reserves
+  reserveX: BigDecimal!
+  reserveY: BigDecimal!
+
+  # tvl at end of hour
+  totalValueLockedUSD: BigDecimal!
+
+  # volume
+  volumeTokenX: BigDecimal!
+  volumeTokenY: BigDecimal!
+
+  # volume usd
+  volumeUSD: BigDecimal!
+  untrackedVolumeUSD: BigDecimal!
+
+  # tx count
+  txCount: BigInt!
+
+  # swap fees
+  feesUSD: BigDecimal!
+}
+
+type LiquidityPosition @entity {
+  # lbPair address + user address
+  id: ID! # chainId:lbPairAddress:userAddress
+  chainId: Int! @indexed
+  user: User!
+  lbPair: LBPair!
+
+  # user's bins liquidities
+  userBinLiquidities: [UserBinLiquidity!]! @derivedFrom(field: "liquidityPosition")
+  binsCount: BigInt!
+
+  # block info
+  block: Int!
+  timestamp: Int!
+}
+
+type UserBinLiquidity @entity {
+  # lbPair address + user + binId
+  id: ID! # chainId:lbPairAddress:userAddress:binId
+  chainId: Int! @indexed
+
+  # lbPair address + user address
+  liquidityPosition: LiquidityPosition!
+
+  # lbPair address + binId
+  lbPairBinId: Bin!
+
+  lbPair: LBPair!
+  user: User!
+  binId: BigInt!
+  liquidity: BigInt!
+
+  block: Int!
+  timestamp: Int!
+}
+
+type Transaction @entity {
+  # transaction hash
+  id: ID! # chainId:txHash
+  chainId: Int! @indexed
+  txHash: Bytes!
+
+  # block info
+  blockNumber: Int!
+  timestamp: Int!
+
+  mints: [Mint!]! @derivedFrom(field: "transaction")
+  burns: [Burn!]! @derivedFrom(field: "transaction")
+  swaps: [Swap!]! @derivedFrom(field: "transaction")
+  flashed: [Flash!]! @derivedFrom(field: "transaction")
+  # collects: [Collect!]! @derivedFrom(field: "transaction")
+  transfers: [Transfer!]! @derivedFrom(field: "transaction")
+}
+
+type Mint @entity {
+  # transaction hash + "#" + index in mints Transaction array
+  id: ID! # chainId:txHash:index
+  chainId: Int! @indexed
+  transaction: Transaction!
+  timestamp: Int! # need this to pull recent txns for specific token or pair
+  # pair
+  lbPair: LBPair!
+
+  # populated from the primary Transfer event
+  lbTokenAmount: BigInt!
+
+  # populated from the Mint event
+  sender: Bytes!
+  recipient: Bytes!
+  origin: Bytes!
+
+  amountX: BigDecimal!
+  amountY: BigDecimal!
+  # derived amount based on available prices of tokens
+  amountUSD: BigDecimal!
+
+  logIndex: BigInt!
+}
+
+type Burn @entity {
+  # transaction hash + "#" + index in burns Transaction array
+  id: ID! # chainId:txHash:index
+  chainId: Int! @indexed
+  transaction: Transaction!
+  timestamp: Int! # need this to pull recent txns for specific token or pair
+  # pair
+  lbPair: LBPair!
+
+  # populated from the primary Transfer event
+  lbTokenAmount: BigInt!
+
+  # populated from the Mint event
+  sender: Bytes!
+  recipient: Bytes!
+  origin: Bytes!
+
+  amountX: BigDecimal!
+  amountY: BigDecimal!
+  # derived amount based on available prices of tokens
+  amountUSD: BigDecimal!
+
+  logIndex: BigInt!
+}
+
+type Swap @entity {
+  # transaction hash + "#" + index in swaps Transaction array
+  id: ID! # chainId:txHash:index
+  chainId: Int! @indexed
+  transaction: Transaction!
+  timestamp: Int! # need this to pull recent txns for specific token or pair
+  # pair
+  lbPair: LBPair!
+
+  # populated from the Swap event
+  sender: Bytes!
+  recipient: Bytes!
+  origin: Bytes!
+  activeId: Int!
+
+  amountXIn: BigDecimal!
+  amountYIn: BigDecimal!
+  amountXOut: BigDecimal!
+  amountYOut: BigDecimal!
+  amountUSD: BigDecimal!
+
+  feesTokenX: BigDecimal!
+  feesTokenY: BigDecimal!
+  feesUSD: BigDecimal!
+
+  logIndex: BigInt!
+}
+
+type Flash @entity {
+  # transaction hash + "#" + index in Flash Transaction array
+  id: ID! # chainId:txHash:index
+  chainId: Int! @indexed
+  transaction: Transaction!
+  timestamp: Int! # need this to pull recent txns for specific token or pair
+  # pair
+  lbPair: LBPair!
+
+  # populated from the FlashLoan event
+  sender: Bytes!
+  origin: Bytes!
+  recipient: Bytes!
+
+  amountX: BigDecimal!
+  amountY: BigDecimal!
+  amountUSD: BigDecimal!
+
+  feesX: BigDecimal!
+  feesY: BigDecimal!
+  feesUSD: BigDecimal!
+
+  logIndex: BigInt!
+}
+
+# indexes both TransferSingle and TransferBatch events
+type Transfer @entity {
+  # transaction hash + "#" + index in transfer Transaction array + "#" + (optional: TransferBatch index)
+  id: ID! # chainId:txHash:index:batchIndex
+  chainId: Int! @indexed
+  transaction: Transaction!
+  timestamp: Int!
+
+  isBatch: Boolean!
+  batchIndex: Int # optional only for TransferBatch event
+  isMint: Boolean!
+  isBurn: Boolean!
+
+  lbPair: LBPair!
+
+  binId: BigInt!
+  amount: BigInt!
+
+  sender: Bytes!
+  from: Bytes!
+  to: Bytes!
+
+  origin: Bytes!
+  logIndex: BigInt!
+}
+
+type UserFeesPerBinData @entity {
+  id: ID! # chainId:userAddress:lbPairAddress:binId
+  chainId: Int! @indexed
+  user: User!
+  lbPair: LBPair!
+  binId: BigInt!
+  accruedFeesX: BigDecimal!
+  accruedFeesY: BigDecimal!
+  priceX: BigDecimal!
+  priceY: BigDecimal!
+  mostRecentDepositTime: Int!
+  timestamp: Int!
+}
+
+type UserFeesHourData @entity {
+  id: ID! # chainId:userAddress:lbPairAddress:date
+  chainId: Int! @indexed
+  date: Int!
+  user: User!
+  lbPair: LBPair!
+  accruedFeesX: BigDecimal!
+  accruedFeesY: BigDecimal!
+  accruedFeesUSD: BigDecimal!
+}
+type UserFeesDayData @entity {
+  id: ID! # chainId:userAddress:lbPairAddress:date
+  chainId: Int! @indexed
+  date: Int!
+  user: User!
+  lbPair: LBPair!
+  accruedFeesX: BigDecimal!
+  accruedFeesY: BigDecimal!
+  accruedFeesUSD: BigDecimal!
+}
+
+# For user point? statistic
+type UserTokenDayData @entity {
+  id: ID! # chainId:userAddress:tokenAddress:date
+  chainId: Int! @indexed
+  timestamp: Int!
+  user: User!
+  token: Token!
+  volumeUSD: BigDecimal!
+  feesEarnedUSD: BigDecimal!
+  feesPaidUSD: BigDecimal!
+}
+
+# UNI V2 LP Support
+
+type UNIV2Factory @entity {
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  address: Bytes!
+  feeRecipient: Bytes!
+  pairCount: BigInt!
+  volumeUSD: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+}
+
+type UNIV2Pair @entity {
+  id: ID! # chainId:address
+  chainId: Int! @indexed
+  # Contract address
+  address: Bytes!
+
+  # Factory
+  factory: UNIV2Factory!
+
+  # Name
+  name: String!
+
+  # mirrored from the smart contract
+  tokenX: Token!
+  tokenY: Token!
+
+  reserveX: BigDecimal!
+  reserveY: BigDecimal!
+
+  fee: BigDecimal!
+
+  # tvl
+  totalValueLockedUSD: BigDecimal!
+
+  # Price in terms of the asset pair
+  tokenXPrice: BigDecimal!
+  tokenYPrice: BigDecimal!
+  # Price in terms of USDC
+  tokenXPriceUSD: BigDecimal!
+  tokenYPriceUSD: BigDecimal!
+
+  # lifetime volume stats
+  volumeTokenX: BigDecimal!
+  volumeTokenY: BigDecimal!
+  volumeUSD: BigDecimal!
+  txCount: BigInt!
+  feesTokenX: BigDecimal!
+  feesTokenY: BigDecimal!
+  feesUSD: BigDecimal! # swap fees
+  # Fields used to help derived relationship
+  # used to detect new exchanges
+
+  liquidityProviderCount: BigInt!
+  #   liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "lbPair")
+  #   dayData: [UNIV2DayData!]! @derivedFrom(field: "univ2Pair")
+  #   hourData: [UNIV2HourData!]! @derivedFrom(field: "univ2Pair")
+
+  #   # Transactions
+  #   mints: [Mint!]! @derivedFrom(field: "lbPair")
+  #   burns: [Burn!]! @derivedFrom(field: "lbPair")
+  #   swaps: [Swap!]! @derivedFrom(field: "lbPair")
+  #   flashed: [Flash!]! @derivedFrom(field: "lbPair")
+  #   # collects: [Collect!]! @derivedFrom(field: "lbPair")
+  #   transfers: [Transfer!]! @derivedFrom(field: "lbPair")
+
+  # Created at
+  timestamp: Int!
+  block: Int!
+}
+
+type UNIV2PairHourData @entity {
+  # timestamp / 3600
+  id: ID! # chainId:pairAddress:date
+  chainId: Int! @indexed
+
+  # date - hour start timestamp
+  date: Int!
+
+  # pair
+  pair: UNIV2Pair!
+
+  tokenX: Token!
+  tokenY: Token!
+
+  # reserves
+  reserveX: BigDecimal!
+  reserveY: BigDecimal!
+
+  # tvl at end of hour
+  totalValueLockedUSD: BigDecimal!
+
+  # volume
+  volumeTokenX: BigDecimal!
+  volumeTokenY: BigDecimal!
+
+  # volume usd
+  volumeUSD: BigDecimal!
+  untrackedVolumeUSD: BigDecimal!
+
+  # tx count
+  txCount: BigInt!
+
+  # swap fees
+  feesUSD: BigDecimal!
+}

@@ -1,0 +1,177 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      { "name": "initialFeeTo", "type": "address", "internalType": "address" },
+      { "name": "initialOwner", "type": "address", "internalType": "address" },
+      { "name": "moePairImplementation_", "type": "address", "internalType": "address" }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  { "type": "function", "name": "acceptOwnership", "inputs": [], "outputs": [], "stateMutability": "nonpayable" },
+  {
+    "type": "function",
+    "name": "allPairs",
+    "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "allPairsLength",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "createPair",
+    "inputs": [
+      { "name": "tokenA", "type": "address", "internalType": "address" },
+      { "name": "tokenB", "type": "address", "internalType": "address" },
+      { "name": "fee", "type": "uint24", "internalType": "uint24" }
+    ],
+    "outputs": [{ "name": "pair", "type": "address", "internalType": "address" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "createPair",
+    "inputs": [
+      { "name": "tokenA", "type": "address", "internalType": "address" },
+      { "name": "tokenB", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [{ "name": "pair", "type": "address", "internalType": "address" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "feeTo",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getPair",
+    "inputs": [
+      { "name": "", "type": "address", "internalType": "address" },
+      { "name": "", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "moePairImplementation",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "pairFee",
+    "inputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "outputs": [{ "name": "", "type": "uint24", "internalType": "uint24" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "pendingOwner",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  { "type": "function", "name": "renounceOwnership", "inputs": [], "outputs": [], "stateMutability": "nonpayable" },
+  {
+    "type": "function",
+    "name": "setFeeTo",
+    "inputs": [{ "name": "_feeTo", "type": "address", "internalType": "address" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setPairFee",
+    "inputs": [
+      { "name": "pair", "type": "address", "internalType": "address" },
+      { "name": "fee", "type": "uint24", "internalType": "uint24" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setPairImplementation",
+    "inputs": [{ "name": "_pairImplementation", "type": "address", "internalType": "address" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "transferOwnership",
+    "inputs": [{ "name": "newOwner", "type": "address", "internalType": "address" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "FeeToSet",
+    "inputs": [{ "name": "feeTo", "type": "address", "indexed": true, "internalType": "address" }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferStarted",
+    "inputs": [
+      { "name": "previousOwner", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "newOwner", "type": "address", "indexed": true, "internalType": "address" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "name": "previousOwner", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "newOwner", "type": "address", "indexed": true, "internalType": "address" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "PairCreated",
+    "inputs": [
+      { "name": "token0", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "token1", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "fee", "type": "uint24", "indexed": false, "internalType": "uint24" },
+      { "name": "pair", "type": "address", "indexed": false, "internalType": "address" },
+      { "name": "", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "PairFeeSet",
+    "inputs": [
+      { "name": "pair", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "fee", "type": "uint24", "indexed": false, "internalType": "uint24" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "PairImplementationSet",
+    "inputs": [{ "name": "pairImplementation", "type": "address", "indexed": true, "internalType": "address" }],
+    "anonymous": false
+  },
+  { "type": "error", "name": "OwnableInvalidOwner", "inputs": [{ "name": "owner", "type": "address", "internalType": "address" }] },
+  { "type": "error", "name": "OwnableUnauthorizedAccount", "inputs": [{ "name": "account", "type": "address", "internalType": "address" }] }
+]

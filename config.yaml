@@ -1,0 +1,33 @@
+name: meme-pulse-envio
+# field_selection:
+# transaction_fields:
+# - from
+# - hash
+networks:
+  - id: 43522
+    start_block: 2773307
+    rpc_config:
+      url: https://rpc.insectarium.memecore.net
+    contracts:
+      - name: LBFactory
+        abi_file_path: abis/LBFactory.json
+        address: 0xcC8721b893166a7d222c9e88d3D581fE37B94D81
+        handler: src/lbFactory.ts
+        events:
+          - event: QuoteAssetAdded (address indexed token)
+          - event: FlashLoanFeeSet (uint256 oldFlashLoanFee, uint256 newFlashLoanFee)
+          - event: FeeRecipientSet (address oldRecipient, address newRecipient)
+          - event: LBPairCreated (address indexed tokenX, address indexed tokenY, uint256 indexed binStep, address LBPair, uint256 pid)
+
+      - name: LBPair
+        abi_file_path: abis/LBPair.json
+        # No address field - we'll discover these addresses from events
+        handler: src/lbPair.ts
+        events:
+          - event: Swap (address indexed sender, address indexed to, uint24 id, bytes32 amountsIn, bytes32 amountsOut, uint24 volatilityAccumulator, bytes32 totalFees, bytes32 protocolFees)
+          - event: DepositedToBins (address indexed sender, address indexed to, uint256[] ids, bytes32[] amounts)
+          - event: WithdrawnFromBins (address indexed sender, address indexed to, uint256[] ids, bytes32[] amounts)
+          - event: CollectedProtocolFees (bytes32 collectedProtocolFees)
+          - event: TransferBatch (address indexed sender, address indexed from, address indexed to, uint256[] ids, uint256[] amounts)
+          - event: StaticFeeParametersSet (address indexed sender, uint16 baseFactor, uint16 filterPeriod, uint16 decayPeriod, uint16 reductionFactor, uint24 variableFeeControl,uint16 protocolShare, uint24 maxVolatilityAccumulator)
+          - event: CompositionFees (address indexed sender, uint24 id, bytes32 totalFees, bytes32 protocolFees)
