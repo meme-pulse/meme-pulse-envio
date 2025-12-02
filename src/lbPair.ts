@@ -88,7 +88,7 @@ LBPair.Swap.handler(async ({ event, context }) => {
   context.LBPair.set(lbPairEntity);
 
   const [lbPairFeeParams, lbPairHourDataEntity, lbPairDayDataEntity, lbFactory, memePulseHourData, memePulseDayData] = await Promise.all([
-    context.LBPairParameterSet.getOrThrow(getLBPairParameterSetPk(event.chainId, lbPairEntity.id), 'LBPairParameterSet not found'),
+    context.LBPairParameterSet.getOrThrow(getLBPairParameterSetPk(event.chainId, event.srcAddress), 'LBPairParameterSet not found'),
     loadLBPairHourData(context, event.chainId, event.block.timestamp, lbPairEntity, true),
     loadLBPairDayData(context, event.chainId, event.block.timestamp, lbPairEntity, true),
     loadLBFactory(context, event.chainId),
@@ -152,7 +152,7 @@ LBPair.CompositionFees.handler(async ({ event, context }) => {
     .plus(new BigDecimal(totalFeesY).multipliedBy(tokenOut.priceUSD));
 
   const binEntity = await trackBin(context, event.chainId, lbPairEntity, event.params.id.toString(), '0', '0', '0', '0', '0', '0');
-  const lbPairFeeParamsPk = getLBPairParameterSetPk(event.chainId, lbPairEntity.id);
+  const lbPairFeeParamsPk = getLBPairParameterSetPk(event.chainId, event.srcAddress);
   const lbPairFeeParams = await context.LBPairParameterSet.getOrThrow(lbPairFeeParamsPk, 'LBPairParameterSet not found');
 
   await updateUserAccruedFeesDataBothTokens(
