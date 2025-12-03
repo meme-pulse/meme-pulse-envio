@@ -10,7 +10,7 @@ export const USDT_ADDRESS: Record<number, string> = {
 };
 
 export const LB_FACTORY_ADDRESS: Record<number, string> = {
-  [43522]: '0xcC8721b893166a7d222c9e88d3D581fE37B94D81',
+  [43522]: '0x1B279B36995A5AfBB75d82187F0025Ffef4572ED',
 };
 
 // Native price is hardcoded (1 MEME = $1), no oracle needed
