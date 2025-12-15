@@ -1,9 +1,10 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+builder = "NIXPACKS"
+buildCommand = "pnpm install --frozen-lockfile && pnpm codegen"
 
 [deploy]
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+startCommand = "pnpm envio start"
 # No healthcheck - Envio indexer is a background process, not an HTTP server
 

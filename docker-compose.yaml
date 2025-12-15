@@ -3,7 +3,7 @@ services:
     image: postgres:16
     restart: always
     ports:
-      - '${ENVIO_PG_PORT:-5433}:5432'
+      - "${ENVIO_PG_PORT:-5432}:5432"
     volumes:
       - envio-indexer-storage:/var/lib/postgresql/data
     environment:
@@ -15,19 +15,20 @@ services:
   graphql-engine:
     image: hasura/graphql-engine:v2.43.0
     ports:
-      - '${HASURA_EXTERNAL_PORT:-8080}:8080'
+      - "${HASURA_EXTERNAL_PORT:-8080}:8080"
     user: 1001:1001
     depends_on:
-      - 'envio-postgres'
+      - "envio-postgres"
     restart: always
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://${ENVIO_PG_USER:-postgres}:${ENVIO_PG_PASSWORD:-testing}@envio-postgres:5432/${ENVIO_PG_DATABASE:-envio-dev}
       HASURA_GRAPHQL_ENABLE_CONSOLE: ${HASURA_GRAPHQL_ENABLE_CONSOLE:-true} # can make this default to false once we are further in our development.
-      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log,
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES:
+        startup, http-log, webhook-log, websocket-log,
         query-log
       HASURA_GRAPHQL_NO_OF_RETRIES: 10
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET:-testing}
-      HASURA_GRAPHQL_STRINGIFY_NUMERIC_TYPES: 'true'
+      HASURA_GRAPHQL_STRINGIFY_NUMERIC_TYPES: "true"
       PORT: 8080
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
     healthcheck:
@@ -44,14 +45,14 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '127.0.0.1:9898:${ENVIO_INDEXER_PORT:-9898}'
+      - "127.0.0.1:9898:${ENVIO_INDEXER_PORT:-9898}"
     depends_on:
       graphql-engine:
         condition: service_healthy
     deploy:
       resources:
         limits:
-          cpus: '0.8'
+          cpus: "0.8"
           memory: 800M
     restart: always
     environment:
