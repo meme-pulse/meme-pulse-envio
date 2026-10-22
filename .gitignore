@@ -33,3 +33,6 @@ build
 *.res.mjs
 generated
 .env
+
+# local secrets
+scripts/env.railway
